@@ -75,7 +75,7 @@
 </p>
 </c>
 
-<c i="Component_xdiEntityColumn" t="danube.desktop.web.ui.shared.XdiEntityColumn" vis="private"/>
+<c i="Component_xdiEntityColumn" t="danube.desktop.web.ui.data.XdiEntityColumn" vis="private"/>
 </c>
 </c>
 </form>
