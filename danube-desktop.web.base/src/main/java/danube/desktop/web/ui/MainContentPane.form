@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<form rbi="resourceBundle">
+<c i="Component_contentPane1" t="nextapp.echo.app.ContentPane">
+
+
+
+
+
+
+
+
+<c i="Component_splitPane1" t="nextapp.echo.app.SplitPane">
+<p n="styleName">Default</p>
+
+<c i="Component_column1" t="nextapp.echo.app.Column">
+<c i="Component_pdsColumn" t="nextapp.echo.app.Column" vis="private">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<c i="Component_row4" t="nextapp.echo.app.Row">
+<c i="Component_button1" t="nextapp.echo.app.Button">
+
+
+<e t="action">
+<h n="actionPerformed" v="onAccountRootActionPerformed"/>
+</e>
+
+
+
+
+
+
+<p n="text">Account Root</p>
+
+<p n="styleName">PlainWhite</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/accountroot.png</p>
+</c>
+<p n="cellSpacing">10px</p>
+<c i="Component_button10" t="nextapp.echo.app.Button">
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/linkcontracts.png</p>
+<p n="text">Link Contracts</p>
+<e t="action">
+<h n="actionPerformed" v="onLinkContractsActionPerformed"/>
+</e>
+<p n="styleName">PlainWhite</p>
+</c>
+<c i="Component_facebookConnectorPanel" t="danube.desktop.web.ui.connectors.FacebookConnectorPanel" vis="private">
+<p n="id">facebookConnectorPanel</p>
+</c>
+<c i="Component_personalConnectorPanel" t="danube.desktop.web.ui.connectors.PersonalConnectorPanel" vis="private">
+<p n="id">personalConnectorPanel</p>
+</c>
+<c i="Component_allfiledConnectorPanel" t="danube.desktop.web.ui.connectors.AllfiledConnectorPanel" vis="private">
+<p n="id">allfiledConnectorPanel</p>
+</c>
+</c>
+<c i="Component_label1" t="nextapp.echo.app.Label">
+
+
+<p n="styleName">Header</p>
+<p n="text">Account Personas</p>
+</c>
+<c i="Component_row7" t="nextapp.echo.app.Row">
+
+
+
+
+
+
+<c i="Component_accountRootGrid" t="danube.desktop.web.ui.AccountRootGrid" vis="private"/>
+</c>
+
+
+
+<p n="layoutData" t="nextapp.echo.app.layout.RowLayoutData">
+<p n="alignment">
+<a h="left"/>
+</p>
+</p>
+<p n="insets">30px</p>
+<p n="visible">false</p>
+
+<c i="Component_label2" t="nextapp.echo.app.Label">
+<p n="styleName">Header</p>
+<p n="text">Applications</p>
+</c>
+
+<p n="cellSpacing">20px</p>
+
+<c i="Component_pdsWebAppGrid" t="nextapp.echo.app.Grid" vis="private">
+
+<p n="orientation">nextapp.echo.app.Grid.ORIENTATION_HORIZONTAL</p>
+<p n="size">5</p>
+</c>
+<c i="Component_label3" t="nextapp.echo.app.Label">
+
+
+<p n="styleName">Header</p>
+
+<p n="text">Data Housekeeping</p>
+</c>
+<c i="Component_row5" t="nextapp.echo.app.Row">
+
+
+<c i="Component_toolTipContainer1" t="nextapp.echo.extras.app.ToolTipContainer">
+<c i="Component_button2" t="nextapp.echo.app.Button">
+
+
+<e t="action">
+<h n="actionPerformed" v="onResetDataActionPerformed"/>
+</e>
+
+
+
+
+
+
+
+
+<p n="styleName">PlainWhite</p>
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/data-clean.png</p>
+<p n="text">Reset data</p>
+</c>
+<c i="Component_panel1" t="nextapp.echo.app.Panel">
+<p n="styleName">Tooltip</p>
+<c i="Component_label4" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">This will clear all data from your Personal Cloud. Make sure you have a backup!</p>
+</c>
+</c>
+</c>
+
+<c i="Component_toolTipContainer2" t="nextapp.echo.extras.app.ToolTipContainer">
+<c i="Component_button3" t="nextapp.echo.app.Button">
+<p n="text">Data Export</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/data-export.png</p>
+<p n="styleName">PlainWhite</p>
+<e t="action">
+<h n="actionPerformed" v="onDataExportActionPerformed"/>
+</e>
+</c>
+<c i="Component_panel2" t="nextapp.echo.app.Panel">
+<p n="styleName">Tooltip</p>
+<c i="Component_label5" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+<p n="text">This allows you to download all the contents of your Personal Cloud as an XDI file.</p>
+</c>
+</c>
+</c>
+<c i="Component_toolTipContainer3" t="nextapp.echo.extras.app.ToolTipContainer">
+<c i="Component_button11" t="nextapp.echo.app.Button">
+
+
+<e t="action">
+<h n="actionPerformed" v="onDataImportActionPerformed"/>
+</e>
+<p n="styleName">PlainWhite</p>
+<p n="text">Data Import</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/data-import.png</p>
+</c>
+<c i="Component_panel3" t="nextapp.echo.app.Panel">
+<p n="styleName">Tooltip</p>
+<c i="Component_label6" t="nextapp.echo.app.Label">
+<p n="styleName">Default</p>
+
+<p n="text">This allows you to import data from an XDI file input your Personal Cloud.</p>
+</c>
+</c>
+</c>
+<p n="cellSpacing">20px</p>
+</c>
+</c>
+</c>
+<c i="Component_column2" t="nextapp.echo.app.Column">
+
+
+<p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+<p n="maximumSize">400px</p>
+<p n="minimumSize">400px</p>
+<p n="alignment">
+<a h="right"/>
+</p>
+</p>
+<p n="insets">10px</p>
+<c i="Component_imageIcon1" t="echopoint.ImageIcon">
+
+
+
+
+<p n="insets">10px 0px 0px 0px</p>
+
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/pds-logo.png</p>
+<p n="width">337px</p>
+
+<p n="height">45px</p>
+</c>
+
+
+
+
+
+
+
+
+
+
+<c i="Component_row2" t="nextapp.echo.app.Row">
+<c i="Component_imageIcon2" t="echopoint.ImageIcon">
+
+
+
+
+
+
+
+
+
+
+<p n="height">68px</p>
+<p n="width">68px</p>
+<p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/projectdanube.png</p>
+</c>
+<p n="cellSpacing">10px</p>
+
+
+<p n="insets">0px 0px 10px 0px</p>
+<p n="alignment">
+<a h="right"/>
+</p>
+<c i="Component_column3" t="nextapp.echo.app.Column">
+<c i="Component_logWindowCheckBox" t="nextapp.echo.app.CheckBox" vis="private">
+
+<e t="action">
+<h n="actionPerformed" v="onLogWindowActionPerformed"/>
+</e>
+
+
+
+
+
+
+<p n="text">Show Log Window</p>
+
+<p n="selected">false</p>
+</c>
+<c i="Component_developerModeCheckBox" t="nextapp.echo.app.CheckBox" vis="private">
+
+<e t="action">
+<h n="actionPerformed" v="onDeveloperModeActionPerformed"/>
+</e>
+
+
+<p n="text">Enable Developer Mode</p>
+
+
+<p n="selected">false</p>
+</c>
+<p n="cellSpacing">10px</p>
+</c>
+</c>
+
+
+</c>
+<p n="separatorVisible">false</p>
+</c>
+<c i="Component_logWindowPane1" t="danube.desktop.web.ui.log.LogWindowPane">
+<p n="visible">false</p>
+</c>
+<c i="Component_accountWindowPane1" t="danube.desktop.web.ui.endpoint.EndpointWindowPane"/>
+
+<p n="backgroundImage">
+<fi r="xy" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/mainback-gray.jpg</fi>
+</p>
+</c>
+</form>

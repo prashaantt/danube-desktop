@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<!-- PredefinedSignInMethod -->
+
+	<bean id="predefinedSignInMethod" class="danube.desktop.web.signin.predefined.PredefinedSignInMethod">
+
+		<!-- Predefined contexts. -->
+
+		<property name="predefinedSignIns">
+			<util:list>
+				<bean class="danube.desktop.web.signin.predefined.PredefinedSignIn">
+					<property name="endpointUrl" value="http://localhost:8080/xdi/users/=!BDF3.1FB.E70C.3958!1111" />
+					<property name="identifier" value="=danube*markus" />
+					<property name="canonical" value="=!BDF3.1FB.E70C.3958!1111" />
+					<property name="secretToken" value="xmarkus" />
+				</bean>
+				<bean class="danube.desktop.web.signin.predefined.PredefinedSignIn">
+					<property name="endpointUrl" value="http://localhost:8080/xdi/users/=!BDF3.1FB.E70C.3958!2222" />
+					<property name="identifier" value="=danube*animesh" />
+					<property name="canonical" value="=!BDF3.1FB.E70C.3958!2222" />
+					<property name="secretToken" value="xanimesh" />
+				</bean>
+			</util:list>
+		</property>
+
+	</bean>
+
+</beans>
