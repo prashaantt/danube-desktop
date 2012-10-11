@@ -4,7 +4,20 @@ This is a "Personal Cloud Desktop" application for the [XDI2](http://github.com/
 
 ### How to build
 
-Just run
+You have to make sure that the XDI2 library as well as a number of XDI2 connectors are built: 
+
+* [xdi2](https://github.com/peacekeeper/xdi2) - XDI2 library
+* [xdi2-connector-facebook](https://github.com/peacekeeper/xdi2-connector-facebook) - Facebook -> XDI Connector
+* [xdi2-connector-personal](https://github.com/peacekeeper/xdi2-connector-personal) - Personal.com -> XDI Connector
+* [xdi2-connector-allfiled](https://github.com/peacekeeper/xdi2-connector-allfiled) - Allfiled -> XDI Connector
+
+You also have to install a few external dependencies (you only have to do this once):
+
+    cd danube-desktop.jars
+    mvn clean install
+    cd ..
+
+Then, just run
 
     mvn clean install
 
