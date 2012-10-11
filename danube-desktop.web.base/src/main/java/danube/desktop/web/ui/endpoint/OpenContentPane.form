@@ -57,7 +57,7 @@
 
 
 
-<c i="Component_xdiPanel" t="danube.desktop.web.components.xdi.XdiPanel" vis="private"/>
+<c i="Component_xdiPanel" t="danube.desktop.web.ui.xdi.XdiPanel" vis="private"/>
 <c i="Component_button1" t="nextapp.echo.app.Button">
 <p n="styleName">Default</p>
 

@@ -14,7 +14,6 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
 import xdi2.client.exceptions.Xdi2ClientException;
-import xdi2.connector.facebook.mapping.FacebookMapping;
 import xdi2.core.ContextNode;
 import xdi2.core.Literal;
 import xdi2.core.features.multiplicity.XdiAttribute;
@@ -135,6 +134,22 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 		message.createAddOperation(StatementUtil.fromLiteralComponents(contextNodeXri, value));
 
 		this.endpoint.send(message);
+	}
+
+	private void xdiAddFacebook() throws Xdi2ClientException {
+
+	}
+
+	private void xdiAddPersonal() throws Xdi2ClientException {
+
+	}
+
+	private void xdiAddAllfiled() throws Xdi2ClientException {
+
+	}
+
+	private void xdiDelLinks() throws Xdi2ClientException {
+
 	}
 
 	private void xdiMod(String value) throws Xdi2ClientException {
@@ -314,20 +329,53 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 
 	private void onLinkFacebookActionPerformed(ActionEvent e) {
 
-		FacebookMapping.getInstance();
-		//TODO Implement.
+		try {
+
+			this.xdiDel();
+			this.xdiAddFacebook();
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
+			return;
+		}
 	}
 
 	private void onLinkPersonalActionPerformed(ActionEvent e) {
-		//TODO Implement.
+
+		try {
+
+			this.xdiDel();
+			this.xdiAddPersonal();
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
+			return;
+		}
 	}
 
 	private void onLinkAllfiledActionPerformed(ActionEvent e) {
-		//TODO Implement.
+
+		try {
+
+			this.xdiDel();
+			this.xdiAddAllfiled();
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
+			return;
+		}
 	}
 
 	private void onUnlinkActionPerformed(ActionEvent e) {
-		//TODO Implement.
+
+		try {
+
+			this.xdiDelLinks();
+		} catch (Exception ex) {
+
+			MessageDialog.problem("Sorry, a problem occurred while storing your Personal Data: " + ex.getMessage(), ex);
+			return;
+		}
 	}
 
 	/**

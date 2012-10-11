@@ -80,7 +80,7 @@
 <p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/xdi-request.png</p>
 </p>
 
-<c i="Component_messageEnvelopeGraphContentPane" t="danube.desktop.web.components.xdi.GraphContentPane" vis="private"/>
+<c i="Component_messageEnvelopeGraphContentPane" t="danube.desktop.web.ui.xdi.GraphContentPane" vis="private"/>
 </c>
 <c i="Component_messageResultTab" t="nextapp.echo.app.ContentPane" vis="private">
 <p n="layoutData" t="nextapp.echo.extras.app.layout.TabPaneLayoutData">
@@ -94,7 +94,7 @@
 
 
 
-<c i="Component_messageResultGraphContentPane" t="danube.desktop.web.components.xdi.GraphContentPane" vis="private"/>
+<c i="Component_messageResultGraphContentPane" t="danube.desktop.web.ui.xdi.GraphContentPane" vis="private"/>
 </c>
 <p n="styleName">Default</p>
 

@@ -74,7 +74,7 @@
 <p n="orientation">nextapp.echo.app.SplitPane.ORIENTATION_VERTICAL_TOP_BOTTOM</p>
 <p n="separatorHeight">10px</p>
 <p n="separatorVisible">false</p>
-<c i="Component_graphContentPane" t="danube.desktop.web.components.xdi.GraphContentPane" vis="private"/>
+<c i="Component_graphContentPane" t="danube.desktop.web.ui.xdi.GraphContentPane" vis="private"/>
 </c>
 </c>
 </form>
