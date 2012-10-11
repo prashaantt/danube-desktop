@@ -1,4 +1,4 @@
-package danube.desktop.web.ui.shared;
+package danube.desktop.web.ui.data;
 
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -15,9 +15,9 @@ import nextapp.echo.app.TextField;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
-import danube.desktop.web.components.xdi.XdiPanel;
 import danube.desktop.web.ui.MainWindow;
 import danube.desktop.web.ui.MessageDialog;
+import danube.desktop.web.ui.xdi.XdiPanel;
 import danube.desktop.xdi.XdiEndpoint;
 import danube.desktop.xdi.events.XdiGraphAddEvent;
 import danube.desktop.xdi.events.XdiGraphDelEvent;
@@ -42,8 +42,9 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XdiCollection xdiCollection;
 	private XRI3Segment xdiCollectionXri;
+	private XdiCollection xdiCollection;
+	private String label;
 
 	private boolean readOnly;
 
@@ -82,6 +83,11 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
+	private void invalidate() {
+		
+		this.xdiCollection = null;
+	}
+	
 	private void refresh() {
 
 		try {
@@ -93,7 +99,7 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 			// refresh UI
 
 			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
-			this.xdiCollectionXriLabel.setText(this.xdiCollection.getContextNode().getArcXri().toString());
+			this.xdiCollectionXriLabel.setText(this.label);
 
 			this.xdiAttributesColumn.removeAll();
 
@@ -170,33 +176,29 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 
 	public void onXdiGraphEvent(XdiGraphEvent xdiGraphEvent) {
 
-		try {
+		if (xdiGraphEvent instanceof XdiGraphAddEvent) {
 
-			if (xdiGraphEvent instanceof XdiGraphAddEvent) {
+			this.invalidate();
+			this.refresh();
+			return;
+		}
 
-				this.refresh();
-				return;
-			}
+		if (xdiGraphEvent instanceof XdiGraphModEvent) {
 
-			if (xdiGraphEvent instanceof XdiGraphModEvent) {
+			this.invalidate();
+			this.refresh();
+			return;
+		}
 
-				this.refresh();
-				return;
-			}
+		if (xdiGraphEvent instanceof XdiGraphDelEvent) {
 
-			if (xdiGraphEvent instanceof XdiGraphDelEvent) {
-
-				this.getParent().remove(this);
-				return;
-			}
-		} catch (Exception ex) {
-
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
+			this.invalidate();
+			this.getParent().remove(this);
 			return;
 		}
 	}
 
-	public void setEndpointAndXdiCollection(XdiEndpoint endpoint, XdiCollection xdiCollection, XRI3Segment xdiCollectionXri) {
+	public void setEndpointAndXdiCollectionXri(XdiEndpoint endpoint, XRI3Segment xdiCollectionXri, XdiCollection xdiCollection, String label) {
 
 		// remove us as listener
 
@@ -207,6 +209,7 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 		this.endpoint = endpoint;
 		this.xdiCollection = xdiCollection;
 		this.xdiCollectionXri = xdiCollectionXri;
+		this.label = label;
 
 		this.refresh();
 
@@ -240,7 +243,7 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 	private void addXdiAttributePanel(XdiAttribute xdiAttribute, String label) {
 
 		XdiAttributePanel xdiAttributePanel = new XdiAttributePanel();
-		xdiAttributePanel.setEndpointAndXdiAttribute(this.endpoint, xdiAttribute, xdiAttribute.getContextNode().getXri(), label);
+		xdiAttributePanel.setEndpointAndXdiAttributeXri(this.endpoint, xdiAttribute.getContextNode().getXri(), xdiAttribute, label);
 		xdiAttributePanel.setReadOnly(this.readOnly);
 
 		this.xdiAttributesColumn.add(xdiAttributePanel);

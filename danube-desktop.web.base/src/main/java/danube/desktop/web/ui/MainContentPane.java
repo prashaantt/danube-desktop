@@ -27,6 +27,13 @@ import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 import nextapp.echo.extras.app.ToolTipContainer;
+import xdi2.connector.allfiled.mapping.AllfiledMapping;
+import xdi2.connector.facebook.mapping.FacebookMapping;
+import xdi2.connector.personal.mapping.PersonalMapping;
+import xdi2.core.constants.XDIConstants;
+import xdi2.core.xri3.impl.XRI3Segment;
+import xdi2.messaging.Message;
+import xdi2.messaging.constants.XDIMessagingConstants;
 import danube.desktop.web.DesktopApplication;
 import danube.desktop.web.events.ApplicationContextClosedEvent;
 import danube.desktop.web.events.ApplicationContextOpenedEvent;
@@ -34,6 +41,7 @@ import danube.desktop.web.events.ApplicationEvent;
 import danube.desktop.web.events.ApplicationListener;
 import danube.desktop.web.ui.accountroot.AccountRootWindowPane;
 import danube.desktop.web.ui.app.DesktopWebApp;
+import danube.desktop.web.ui.connectors.AllfiledConnectorPanel;
 import danube.desktop.web.ui.connectors.FacebookConnectorPanel;
 import danube.desktop.web.ui.connectors.PersonalConnectorPanel;
 import danube.desktop.web.ui.dataexport.DataExportWindowPane;
@@ -41,15 +49,7 @@ import danube.desktop.web.ui.dataimport.DataImportWindowPane;
 import danube.desktop.web.ui.endpoint.EndpointWindowPane;
 import danube.desktop.web.ui.log.LogWindowPane;
 import danube.desktop.xdi.XdiEndpoint;
-import xdi2.connector.facebook.mapping.FacebookMapping;
-import xdi2.connector.personal.mapping.PersonalMapping;
-import xdi2.core.constants.XDIConstants;
-import xdi2.core.xri3.impl.XRI3Segment;
-import xdi2.messaging.Message;
-import xdi2.messaging.constants.XDIMessagingConstants;
 import echopoint.ImageIcon;
-import danube.desktop.web.ui.connectors.AllfiledConnectorPanel;
-import danube.desktop.web.ui.AccountRootGrid;
 
 public class MainContentPane extends ContentPane implements ApplicationListener {
 
@@ -59,15 +59,14 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 	private XdiEndpoint endpoint;
 
-	private Column pdsColumn;
+	private Column desktopColumn;
 	private AccountRootGrid accountRootGrid;
 	private FacebookConnectorPanel facebookConnectorPanel;
 	private PersonalConnectorPanel personalConnectorPanel;
+	private AllfiledConnectorPanel allfiledConnectorPanel;
 	private CheckBox logWindowCheckBox;
 	private CheckBox developerModeCheckBox;
-	private Grid pdsWebAppGrid;
-
-	private AllfiledConnectorPanel allfiledConnectorPanel;
+	private Grid desktopWebAppGrid;
 
 	/**
 	 * Creates a new <code>MainContentPane</code>.
@@ -86,25 +85,25 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 		// add PdsWebApps
 
-		for (final DesktopWebApp pdsWebApp : DesktopApplication.getApp().getServlet().getDesktopWebApps()) {
+		for (final DesktopWebApp desktopWebApp : DesktopApplication.getApp().getServlet().getDesktopWebApps()) {
 
-			Button pdsWebAppButton = new Button();
-			pdsWebAppButton.setStyleName("PlainWhite");
-			ResourceImageReference imageReference = pdsWebApp.getResourceImageReference();
-			pdsWebAppButton.setIcon(imageReference);
-			pdsWebAppButton.setText(pdsWebApp.getName());
-			pdsWebAppButton.setInsets(new Insets(new Extent(10, Extent.PX)));
+			Button desktopWebAppButton = new Button();
+			desktopWebAppButton.setStyleName("PlainWhite");
+			ResourceImageReference imageReference = desktopWebApp.getResourceImageReference();
+			desktopWebAppButton.setIcon(imageReference);
+			desktopWebAppButton.setText(desktopWebApp.getName());
+			desktopWebAppButton.setInsets(new Insets(new Extent(10, Extent.PX)));
 
-			pdsWebAppButton.addActionListener(new ActionListener() {
+			desktopWebAppButton.addActionListener(new ActionListener() {
 
 				private static final long serialVersionUID = 1L;
 
 				public void actionPerformed(ActionEvent e) {
 
-					pdsWebApp.onActionPerformed(MainContentPane.this, MainContentPane.this.getEndpoint());
+					desktopWebApp.onActionPerformed(MainContentPane.this, MainContentPane.this.getEndpoint());
 				}
 			});
-			MainContentPane.this.pdsWebAppGrid.add(pdsWebAppButton);
+			MainContentPane.this.desktopWebAppGrid.add(desktopWebAppButton);
 		}
 
 		// add us as listener
@@ -140,9 +139,11 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 		XRI3Segment facebookXdiAttributeXri = new XRI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + this.endpoint.getCanonical() + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
 		XRI3Segment personalXdiAttributeXri = new XRI3Segment("" + PersonalMapping.XRI_S_PERSONAL_CONTEXT + this.endpoint.getCanonical() + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
+		XRI3Segment allfiledXdiAttributeXri = new XRI3Segment("" + AllfiledMapping.XRI_S_ALLFILED_CONTEXT + this.endpoint.getCanonical() + XDIMessagingConstants.XRI_S_OAUTH_TOKEN);
 
-		this.facebookConnectorPanel.setEndpointAndXdiAttribute(this.endpoint, null, facebookXdiAttributeXri);
-		this.personalConnectorPanel.setEndpointAndXdiAttribute(this.endpoint, null, personalXdiAttributeXri);
+		this.facebookConnectorPanel.setEndpointAndXdiAttributeXri(this.endpoint, facebookXdiAttributeXri, null);
+		this.personalConnectorPanel.setEndpointAndXdiAttributeXri(this.endpoint, personalXdiAttributeXri, null);
+		this.allfiledConnectorPanel.setEndpointAndXdiAttributeXri(this.endpoint, allfiledXdiAttributeXri, null);
 	}
 
 	public XdiEndpoint getEndpoint() {
@@ -159,7 +160,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 		if (applicationEvent instanceof ApplicationContextOpenedEvent) {
 
-			this.pdsColumn.setVisible(true);
+			this.desktopColumn.setVisible(true);
 
 			this.endpoint = ((ApplicationContextOpenedEvent) applicationEvent).getEndpoint();
 
@@ -168,7 +169,7 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 
 		if (applicationEvent instanceof ApplicationContextClosedEvent) {
 
-			this.pdsColumn.setVisible(false);
+			this.desktopColumn.setVisible(false);
 
 			for (Component component : MainWindow.findChildComponentsByClass(this, WindowPane.class)) {
 
@@ -278,18 +279,18 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		add(splitPane1);
 		Column column1 = new Column();
 		splitPane1.add(column1);
-		pdsColumn = new Column();
-		pdsColumn.setVisible(false);
-		pdsColumn.setInsets(new Insets(new Extent(30, Extent.PX)));
-		pdsColumn.setCellSpacing(new Extent(20, Extent.PX));
-		RowLayoutData pdsColumnLayoutData = new RowLayoutData();
-		pdsColumnLayoutData.setAlignment(new Alignment(Alignment.LEFT,
+		desktopColumn = new Column();
+		desktopColumn.setVisible(false);
+		desktopColumn.setInsets(new Insets(new Extent(30, Extent.PX)));
+		desktopColumn.setCellSpacing(new Extent(20, Extent.PX));
+		RowLayoutData desktopColumnLayoutData = new RowLayoutData();
+		desktopColumnLayoutData.setAlignment(new Alignment(Alignment.LEFT,
 				Alignment.DEFAULT));
-		pdsColumn.setLayoutData(pdsColumnLayoutData);
-		column1.add(pdsColumn);
+		desktopColumn.setLayoutData(desktopColumnLayoutData);
+		column1.add(desktopColumn);
 		Row row4 = new Row();
 		row4.setCellSpacing(new Extent(10, Extent.PX));
-		pdsColumn.add(row4);
+		desktopColumn.add(row4);
 		Button button1 = new Button();
 		button1.setStyleName("PlainWhite");
 		ResourceImageReference imageReference2 = new ResourceImageReference(
@@ -330,26 +331,26 @@ public class MainContentPane extends ContentPane implements ApplicationListener 
 		Label label1 = new Label();
 		label1.setStyleName("Header");
 		label1.setText("Account Personas");
-		pdsColumn.add(label1);
+		desktopColumn.add(label1);
 		Row row7 = new Row();
-		pdsColumn.add(row7);
+		desktopColumn.add(row7);
 		accountRootGrid = new AccountRootGrid();
 		row7.add(accountRootGrid);
 		Label label2 = new Label();
 		label2.setStyleName("Header");
 		label2.setText("Applications");
-		pdsColumn.add(label2);
-		pdsWebAppGrid = new Grid();
-		pdsWebAppGrid.setOrientation(Grid.ORIENTATION_HORIZONTAL);
-		pdsWebAppGrid.setSize(5);
-		pdsColumn.add(pdsWebAppGrid);
+		desktopColumn.add(label2);
+		desktopWebAppGrid = new Grid();
+		desktopWebAppGrid.setOrientation(Grid.ORIENTATION_HORIZONTAL);
+		desktopWebAppGrid.setSize(5);
+		desktopColumn.add(desktopWebAppGrid);
 		Label label3 = new Label();
 		label3.setStyleName("Header");
 		label3.setText("Data Housekeeping");
-		pdsColumn.add(label3);
+		desktopColumn.add(label3);
 		Row row5 = new Row();
 		row5.setCellSpacing(new Extent(20, Extent.PX));
-		pdsColumn.add(row5);
+		desktopColumn.add(row5);
 		ToolTipContainer toolTipContainer1 = new ToolTipContainer();
 		row5.add(toolTipContainer1);
 		Button button2 = new Button();

@@ -1,4 +1,4 @@
-package danube.desktop.web.components.xdi;
+package danube.desktop.web.ui.xdi;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -17,8 +17,8 @@ import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.event.ChangeEvent;
 import nextapp.echo.app.event.ChangeListener;
 import danube.desktop.web.DesktopApplication;
-import danube.desktop.web.components.HtmlLabel;
 import danube.desktop.web.ui.MessageDialog;
+import danube.desktop.web.ui.html.HtmlLabel;
 import danube.desktop.web.util.HtmlUtil;
 import xdi2.core.Graph;
 import xdi2.core.Literal;

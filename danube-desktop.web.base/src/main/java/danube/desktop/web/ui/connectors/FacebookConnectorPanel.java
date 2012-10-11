@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import nextapp.echo.app.Button;
 import nextapp.echo.app.Panel;
+import nextapp.echo.app.ResourceImageReference;
 import nextapp.echo.app.TaskQueueHandle;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
@@ -17,15 +18,6 @@ import nextapp.echo.webcontainer.command.BrowserRedirectCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import danube.desktop.web.DesktopApplication;
-import danube.desktop.web.servlet.external.ExternalCallReceiver;
-import danube.desktop.web.ui.MessageDialog;
-import danube.desktop.xdi.XdiEndpoint;
-import danube.desktop.xdi.events.XdiGraphAddEvent;
-import danube.desktop.xdi.events.XdiGraphDelEvent;
-import danube.desktop.xdi.events.XdiGraphEvent;
-import danube.desktop.xdi.events.XdiGraphListener;
-import danube.desktop.xdi.events.XdiGraphModEvent;
 import xdi2.client.exceptions.Xdi2ClientException;
 import xdi2.connector.facebook.api.FacebookApi;
 import xdi2.connector.facebook.mapping.FacebookMapping;
@@ -35,7 +27,16 @@ import xdi2.core.util.StatementUtil;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
-import nextapp.echo.app.ResourceImageReference;
+import danube.desktop.web.DesktopApplication;
+import danube.desktop.web.servlet.external.ExternalCallReceiver;
+import danube.desktop.web.ui.MessageDialog;
+import danube.desktop.xdi.XdiEndpoint;
+import danube.desktop.xdi.events.XdiGraphAddEvent;
+import danube.desktop.xdi.events.XdiGraphDelEvent;
+import danube.desktop.xdi.events.XdiGraphEvent;
+import danube.desktop.xdi.events.XdiGraphGetEvent;
+import danube.desktop.xdi.events.XdiGraphListener;
+import danube.desktop.xdi.events.XdiGraphModEvent;
 
 public class FacebookConnectorPanel extends Panel implements XdiGraphListener, ExternalCallReceiver {
 
@@ -46,8 +47,8 @@ public class FacebookConnectorPanel extends Panel implements XdiGraphListener, E
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XdiAttribute xdiAttribute;
 	private XRI3Segment xdiAttributeXri;
+	private XdiAttribute xdiAttribute;
 
 	private FacebookApi facebookApi;
 	private FacebookMapping facebookMapping;
@@ -81,6 +82,11 @@ public class FacebookConnectorPanel extends Panel implements XdiGraphListener, E
 		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
+	private void invalidate() {
+		
+		this.xdiAttribute = null;
+	}
+	
 	private void refresh() {
 
 		try {
@@ -134,7 +140,7 @@ public class FacebookConnectorPanel extends Panel implements XdiGraphListener, E
 
 	public XRI3Segment xdiMainAddress() {
 
-		return this.xdiAttribute.getContextNode().getXri();
+		return this.xdiAttributeXri;
 	}
 
 	public XRI3Segment[] xdiGetAddresses() {
@@ -144,12 +150,16 @@ public class FacebookConnectorPanel extends Panel implements XdiGraphListener, E
 
 	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3Segment[0];
+		return new XRI3Segment[] {
+				this.xdiAttributeXri
+		};
 	}
 
 	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3Segment[0];
+		return new XRI3Segment[] {
+				this.xdiAttributeXri
+		};
 	}
 
 	public XRI3Segment[] xdiDelAddresses() {
@@ -161,33 +171,29 @@ public class FacebookConnectorPanel extends Panel implements XdiGraphListener, E
 
 	public void onXdiGraphEvent(XdiGraphEvent xdiGraphEvent) {
 
-		try {
+		if (xdiGraphEvent instanceof XdiGraphAddEvent) {
 
-			if (xdiGraphEvent instanceof XdiGraphAddEvent) {
+			this.invalidate();
+			this.refresh();
+			return;
+		}
 
-				this.refresh();
-				return;
-			}
+		if (xdiGraphEvent instanceof XdiGraphModEvent) {
 
-			if (xdiGraphEvent instanceof XdiGraphModEvent) {
+			this.invalidate();
+			this.refresh();
+			return;
+		}
 
-				this.refresh();
-				return;
-			}
+		if (xdiGraphEvent instanceof XdiGraphDelEvent) {
 
-			if (xdiGraphEvent instanceof XdiGraphDelEvent) {
-
-				this.removeAll();
-				return;
-			}
-		} catch (Exception ex) {
-
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
+			this.invalidate();
+			this.refresh();
 			return;
 		}
 	}
 
-	public void setEndpointAndXdiAttribute(XdiEndpoint endpoint, XdiAttribute xdiAttribute, XRI3Segment xdiAttributeXri) {
+	public void setEndpointAndXdiAttributeXri(XdiEndpoint endpoint, XRI3Segment xdiAttributeXri, XdiAttribute xdiAttribute) {
 
 		// remove us as listener
 
@@ -196,8 +202,8 @@ public class FacebookConnectorPanel extends Panel implements XdiGraphListener, E
 		// refresh
 
 		this.endpoint = endpoint;
-		this.xdiAttribute = xdiAttribute;
 		this.xdiAttributeXri = xdiAttributeXri;
+		this.xdiAttribute = xdiAttribute;
 
 		this.refresh();
 

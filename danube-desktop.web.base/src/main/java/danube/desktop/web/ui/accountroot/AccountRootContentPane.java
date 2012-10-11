@@ -12,9 +12,9 @@ import nextapp.echo.app.Row;
 import nextapp.echo.app.SplitPane;
 import nextapp.echo.app.layout.RowLayoutData;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
-import danube.desktop.web.components.xdi.XdiPanel;
 import danube.desktop.web.ui.MessageDialog;
-import danube.desktop.web.ui.shared.XdiEntityColumn;
+import danube.desktop.web.ui.data.XdiEntityColumn;
+import danube.desktop.web.ui.xdi.XdiPanel;
 import danube.desktop.xdi.XdiEndpoint;
 import danube.desktop.xdi.events.XdiGraphEvent;
 import danube.desktop.xdi.events.XdiGraphListener;
@@ -66,7 +66,7 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 
 			this.inumberLabel.setText(this.contextNodeXri.toString());
 			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
-			this.xdiEntityColumn.setEndpointAndXdiEntity(this.endpoint, null, this.contextNodeXri);
+			this.xdiEntityColumn.setEndpointAndXdiEntityXri(this.endpoint, this.contextNodeXri, null);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);

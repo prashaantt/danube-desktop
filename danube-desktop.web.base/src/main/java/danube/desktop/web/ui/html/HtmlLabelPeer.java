@@ -1,4 +1,4 @@
-package danube.desktop.web.components;
+package danube.desktop.web.ui.html;
 
 import nextapp.echo.app.Component;
 import nextapp.echo.app.util.Context;
@@ -15,7 +15,7 @@ public class HtmlLabelPeer extends AbstractComponentSynchronizePeer {
 
 		WebContainerServlet.getServiceRegistry().add(
 				JavaScriptService.forResource(JFIX_HTML_LABEL,
-				"danube/desktop/web/components/HtmlLabel.js"));
+				"danube/desktop/web/ui/html/HtmlLabel.js"));
 
 	}
 

@@ -17,11 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import danube.desktop.web.DesktopApplication;
-import danube.desktop.web.components.HtmlLabel;
 import danube.desktop.web.servlet.external.ExternalCallReceiver;
 import danube.desktop.web.signin.rpxnow.rpx.Rpx;
 import danube.desktop.web.tools.util.XmlUtils;
 import danube.desktop.web.ui.MessageDialog;
+import danube.desktop.web.ui.html.HtmlLabel;
 import danube.desktop.xdi.XdiClient;
 import danube.desktop.xdi.XdiEndpoint;
 import xdi2.core.xri3.impl.XRI3Segment;

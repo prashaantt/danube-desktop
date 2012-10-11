@@ -22,7 +22,7 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.SplitPaneLayoutData;
 import danube.desktop.web.DesktopApplication;
-import danube.desktop.web.components.xdi.XdiPanel;
+import danube.desktop.web.ui.xdi.XdiPanel;
 import danube.desktop.xdi.XdiEndpoint;
 import danube.desktop.xdi.XdiException;
 import danube.desktop.xdi.events.XdiGraphEvent;

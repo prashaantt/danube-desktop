@@ -1,4 +1,4 @@
-package danube.desktop.web.components.xdi;
+package danube.desktop.web.ui.xdi;
 
 import java.util.ResourceBundle;
 

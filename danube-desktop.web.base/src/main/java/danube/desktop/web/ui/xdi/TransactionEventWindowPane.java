@@ -1,10 +1,10 @@
-package danube.desktop.web.components.xdi;
+package danube.desktop.web.ui.xdi;
 
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Extent;
 import nextapp.echo.app.WindowPane;
-import danube.desktop.web.components.xdi.TransactionEventContentPane;
+import danube.desktop.web.ui.xdi.TransactionEventContentPane;
 import danube.desktop.xdi.events.XdiTransactionEvent;
 
 public class TransactionEventWindowPane extends WindowPane {

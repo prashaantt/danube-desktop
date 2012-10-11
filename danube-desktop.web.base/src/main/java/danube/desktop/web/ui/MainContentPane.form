@@ -13,7 +13,7 @@
 <p n="styleName">Default</p>
 
 <c i="Component_column1" t="nextapp.echo.app.Column">
-<c i="Component_pdsColumn" t="nextapp.echo.app.Column" vis="private">
+<c i="Component_desktopColumn" t="nextapp.echo.app.Column" vis="private">
 
 
 
@@ -101,7 +101,7 @@
 
 <p n="cellSpacing">20px</p>
 
-<c i="Component_pdsWebAppGrid" t="nextapp.echo.app.Grid" vis="private">
+<c i="Component_desktopWebAppGrid" t="nextapp.echo.app.Grid" vis="private">
 
 <p n="orientation">nextapp.echo.app.Grid.ORIENTATION_HORIZONTAL</p>
 <p n="size">5</p>

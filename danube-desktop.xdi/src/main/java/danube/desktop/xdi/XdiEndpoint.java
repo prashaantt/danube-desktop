@@ -28,6 +28,7 @@ import xdi2.core.ContextNode;
 import xdi2.core.Statement;
 import xdi2.core.constants.XDILinkContractConstants;
 import xdi2.core.features.remoteroots.RemoteRoots;
+import xdi2.core.util.StatementUtil;
 import xdi2.core.util.XRIUtil;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
@@ -226,9 +227,19 @@ public class XdiEndpoint {
 			if (operation.isWriteOperation()) {
 
 				XRI3Segment operationXri = operation.getOperationXri();
-				XRI3Segment targetXri = operation.getTarget();
+				XRI3Segment target = operation.getTarget();
 
-				this.fireXdiGraphEvent(operationXri, targetXri);
+				try {
+					
+					Statement targetStatement = StatementUtil.fromXriSegment(target);
+
+					this.fireXdiGraphEvent(operationXri, targetStatement.getContextNodeXri());
+				} catch (Exception ex) {
+
+					XRI3Segment targetAddress = target;
+					
+					this.fireXdiGraphEvent(operationXri, targetAddress);
+				}
 			}
 		}
 

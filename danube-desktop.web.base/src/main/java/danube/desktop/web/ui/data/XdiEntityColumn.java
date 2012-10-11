@@ -1,10 +1,10 @@
-package danube.desktop.web.ui.shared;
+package danube.desktop.web.ui.data;
 
 import java.util.ResourceBundle;
 
 import nextapp.echo.app.Column;
 import nextapp.echo.app.Component;
-import danube.desktop.dictionary.PdsDictionary;
+import danube.desktop.dictionary.PersonDictionary;
 import danube.desktop.web.ui.MainWindow;
 import danube.desktop.web.ui.MessageDialog;
 import danube.desktop.xdi.XdiEndpoint;
@@ -29,8 +29,8 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XdiEntity xdiEntity;
 	private XRI3Segment xdiEntityXri;
+	private XdiEntity xdiEntity;
 
 	private boolean readOnly;
 
@@ -62,6 +62,11 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 		if (this.endpoint != null) this.endpoint.removeXdiGraphListener(this);
 	}
 
+	private void invalidate() {
+		
+		this.xdiEntity = null;
+	}
+
 	private void refresh() {
 
 		try {
@@ -72,20 +77,20 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 
 			// refresh UI
 
-			XRI3Segment[] pdsDictionaryXris = PdsDictionary.DICTIONARY_PERSON;
+			XRI3Segment[] personDictionaryXris = PersonDictionary.DICTIONARY_PERSON;
 
 			this.removeAll();
 
-			for (XRI3Segment pdsDictionaryXri : pdsDictionaryXris) {
+			for (XRI3Segment personDictionaryXri : personDictionaryXris) {
 
-				ContextNode contextNode = this.xdiEntity.getContextNode().findContextNode(pdsDictionaryXri, true);
+				ContextNode contextNode = this.xdiEntity.getContextNode().findContextNode(personDictionaryXri, true);
 
 				if (XdiCollection.isValid(contextNode)) {
 
-					this.addXdiCollectionPanel(XdiCollection.fromContextNode(contextNode));
+					this.addXdiCollectionPanel(XdiCollection.fromContextNode(contextNode), personDictionaryXri.toString());
 				} else if (XdiAttribute.isValid(contextNode)) {
 
-					this.addXdiAttributePanel(XdiAttribute.fromContextNode(contextNode), pdsDictionaryXri.toString());
+					this.addXdiAttributePanel(XdiAttribute.fromContextNode(contextNode), personDictionaryXri.toString());
 				}
 			}
 		} catch (Exception ex) {
@@ -110,10 +115,10 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 		this.xdiEntity = XdiEntity.fromContextNode(contextNode);
 	}
 
-	private void addXdiCollectionPanel(XdiCollection xdiCollection) {
+	private void addXdiCollectionPanel(XdiCollection xdiCollection, String label) {
 
 		XdiCollectionPanel xdiCollectionPanel = new XdiCollectionPanel();
-		xdiCollectionPanel.setEndpointAndXdiCollection(this.endpoint, xdiCollection, xdiCollection.getContextNode().getXri());
+		xdiCollectionPanel.setEndpointAndXdiCollectionXri(this.endpoint, xdiCollection.getContextNode().getXri(), xdiCollection, label);
 		xdiCollectionPanel.setReadOnly(this.readOnly);
 
 		this.add(xdiCollectionPanel);
@@ -122,7 +127,7 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 	private void addXdiAttributePanel(XdiAttribute xdiAttribute, String label) {
 
 		XdiAttributePanel xdiAttributePanel = new XdiAttributePanel();
-		xdiAttributePanel.setEndpointAndXdiAttribute(this.endpoint, xdiAttribute, xdiAttribute.getContextNode().getXri(), label);
+		xdiAttributePanel.setEndpointAndXdiAttributeXri(this.endpoint, xdiAttribute.getContextNode().getXri(), xdiAttribute, label);
 		xdiAttributePanel.setReadOnly(this.readOnly);
 
 		this.add(xdiAttributePanel);
@@ -157,33 +162,29 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 
 	public void onXdiGraphEvent(XdiGraphEvent xdiGraphEvent) {
 
-		try {
+		if (xdiGraphEvent instanceof XdiGraphAddEvent) {
 
-			if (xdiGraphEvent instanceof XdiGraphAddEvent) {
+			this.invalidate();
+			this.refresh();
+			return;
+		}
 
-				this.refresh();
-				return;
-			}
+		if (xdiGraphEvent instanceof XdiGraphModEvent) {
 
-			if (xdiGraphEvent instanceof XdiGraphModEvent) {
+			this.invalidate();
+			this.refresh();
+			return;
+		}
 
-				this.refresh();
-				return;
-			}
+		if (xdiGraphEvent instanceof XdiGraphDelEvent) {
 
-			if (xdiGraphEvent instanceof XdiGraphDelEvent) {
-
-				this.removeAll();
-				return;
-			}
-		} catch (Exception ex) {
-
-			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
+			this.invalidate();
+			this.getParent().remove(this);
 			return;
 		}
 	}
 
-	public void setEndpointAndXdiEntity(XdiEndpoint endpoint, XdiEntity xdiEntity, XRI3Segment xdiEntityXri) {
+	public void setEndpointAndXdiEntityXri(XdiEndpoint endpoint, XRI3Segment xdiEntityXri, XdiEntity xdiEntity) {
 
 		// remove us as listener
 
@@ -192,8 +193,8 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 		// refresh
 
 		this.endpoint = endpoint;
-		this.xdiEntity = xdiEntity;
 		this.xdiEntityXri = xdiEntityXri;
+		this.xdiEntity = xdiEntity;
 
 		this.refresh();
 

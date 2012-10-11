@@ -51,6 +51,12 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>xdi2</groupId>
+			<artifactId>xdi2-connector-allfiled</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>danube-desktop</groupId>
 			<artifactId>danube-desktop.web.logger</artifactId>
 			<version>0.1-SNAPSHOT</version>

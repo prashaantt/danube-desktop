@@ -1,4 +1,4 @@
-package danube.desktop.web.components.xdi;
+package danube.desktop.web.ui.xdi;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,7 +22,7 @@ import nextapp.echo.extras.app.TabPane;
 import nextapp.echo.extras.app.layout.TabPaneLayoutData;
 import danube.desktop.xdi.events.XdiTransactionEvent;
 import danube.desktop.xdi.events.XdiTransactionFailureEvent;
-import danube.desktop.web.components.xdi.GraphContentPane;
+import danube.desktop.web.ui.xdi.GraphContentPane;
 
 public class TransactionEventContentPane extends ContentPane  {
 

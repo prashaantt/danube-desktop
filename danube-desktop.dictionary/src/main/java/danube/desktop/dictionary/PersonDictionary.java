@@ -4,7 +4,7 @@ import xdi2.core.features.multiplicity.Multiplicity;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.core.xri3.impl.XRI3SubSegment;
 
-public class PdsDictionary {
+public class PersonDictionary {
 
 	public static final XRI3Segment XRI_NAME = new XRI3Segment("" + Multiplicity.attributeSingletonArcXri(new XRI3SubSegment("+name")));
 	public static final XRI3Segment XRI_STREET = new XRI3Segment("" + Multiplicity.attributeSingletonArcXri(new XRI3SubSegment("+street")));

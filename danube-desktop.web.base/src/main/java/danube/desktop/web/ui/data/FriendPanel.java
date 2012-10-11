@@ -1,4 +1,4 @@
-package danube.desktop.web.ui.shared;
+package danube.desktop.web.ui.data;
 
 import java.util.ResourceBundle;
 
@@ -11,8 +11,8 @@ import nextapp.echo.app.Row;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
-import danube.desktop.web.components.xdi.XdiPanel;
 import danube.desktop.web.ui.MessageDialog;
+import danube.desktop.web.ui.xdi.XdiPanel;
 import danube.desktop.xdi.XdiEndpoint;
 import danube.desktop.xdi.events.XdiGraphDelEvent;
 import danube.desktop.xdi.events.XdiGraphEvent;

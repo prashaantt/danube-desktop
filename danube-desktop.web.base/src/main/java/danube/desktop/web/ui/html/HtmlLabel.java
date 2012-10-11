@@ -1,4 +1,4 @@
-package danube.desktop.web.components;
+package danube.desktop.web.ui.html;
 
 import nextapp.echo.app.Component;
 
