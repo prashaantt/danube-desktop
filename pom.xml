@@ -11,6 +11,7 @@
 
 	<modules>
 		<module>danube-desktop.dictionary</module>
+		<module>danube-desktop.discovery</module>
 		<module>danube-desktop.web</module>
 		<module>danube-desktop.web.base</module>
 		<module>danube-desktop.web.logger</module>

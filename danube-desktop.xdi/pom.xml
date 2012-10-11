@@ -14,6 +14,12 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>danube-desktop</groupId>
+			<artifactId>danube-desktop.discovery</artifactId>
+			<version>0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
 			<groupId>xdi2</groupId>
 			<artifactId>xdi2-client</artifactId>
 			<version>0.1-SNAPSHOT</version>
