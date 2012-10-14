@@ -77,7 +77,7 @@ public class AllfiledConnectorPanel extends Panel implements XdiGraphListener, E
 	}
 
 	private void invalidate() {
-		
+
 		this.xdiAttribute = null;
 	}
 
@@ -265,6 +265,8 @@ public class AllfiledConnectorPanel extends Panel implements XdiGraphListener, E
 
 							AllfiledConnectorPanel.this.xdiDel();
 							AllfiledConnectorPanel.this.xdiAdd(accessToken);
+
+							MessageDialog.info("Successfully connected to Allfiled!");
 						} catch (Xdi2ClientException ex) {
 
 							MessageDialog.problem("Sorry, a problem occurred: " + ex.getMessage(), ex);
@@ -306,7 +308,7 @@ public class AllfiledConnectorPanel extends Panel implements XdiGraphListener, E
 		button1.setText("Connect to Allfiled");
 		button1.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
-	
+
 			public void actionPerformed(ActionEvent e) {
 				onConnectAllfiledActionPerformed(e);
 			}

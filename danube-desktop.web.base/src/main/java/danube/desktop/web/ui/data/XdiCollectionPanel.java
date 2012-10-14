@@ -15,15 +15,6 @@ import nextapp.echo.app.TextField;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
-import danube.desktop.web.ui.MainWindow;
-import danube.desktop.web.ui.MessageDialog;
-import danube.desktop.web.ui.xdi.XdiPanel;
-import danube.desktop.xdi.XdiEndpoint;
-import danube.desktop.xdi.events.XdiGraphAddEvent;
-import danube.desktop.xdi.events.XdiGraphDelEvent;
-import danube.desktop.xdi.events.XdiGraphEvent;
-import danube.desktop.xdi.events.XdiGraphListener;
-import danube.desktop.xdi.events.XdiGraphModEvent;
 import xdi2.client.exceptions.Xdi2ClientException;
 import xdi2.core.ContextNode;
 import xdi2.core.features.multiplicity.Multiplicity;
@@ -34,6 +25,15 @@ import xdi2.core.util.StatementUtil;
 import xdi2.core.xri3.impl.XRI3Segment;
 import xdi2.messaging.Message;
 import xdi2.messaging.MessageResult;
+import danube.desktop.web.ui.MainWindow;
+import danube.desktop.web.ui.MessageDialog;
+import danube.desktop.web.ui.xdi.XdiPanel;
+import danube.desktop.xdi.XdiEndpoint;
+import danube.desktop.xdi.events.XdiGraphAddEvent;
+import danube.desktop.xdi.events.XdiGraphDelEvent;
+import danube.desktop.xdi.events.XdiGraphEvent;
+import danube.desktop.xdi.events.XdiGraphListener;
+import danube.desktop.xdi.events.XdiGraphModEvent;
 
 public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 
@@ -42,9 +42,9 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XRI3Segment xdiCollectionXri;
+	private XRI3Segment contextNodeXri;
+	private XRI3Segment collectionXri;
 	private XdiCollection xdiCollection;
-	private String label;
 
 	private boolean readOnly;
 
@@ -99,7 +99,7 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 			// refresh UI
 
 			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
-			this.xdiCollectionXriLabel.setText(this.label);
+			this.xdiCollectionXriLabel.setText(this.collectionXri.toString());
 
 			this.xdiAttributesColumn.removeAll();
 
@@ -107,7 +107,7 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 
 				XdiAttributeMember xdiAttributeMember = xdiAttributeMembers.next();
 
-				this.addXdiAttributePanel(xdiAttributeMember, xdiAttributeMember.getContextNode().getArcXri().toString());
+				this.addXdiAttributePanel(xdiAttributeMember.getContextNode().getXri(), new XRI3Segment("" + xdiAttributeMember.getContextNode().getArcXri()), xdiAttributeMember);
 			}
 		} catch (Exception ex) {
 
@@ -121,11 +121,11 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 		// $get
 
 		Message message = this.endpoint.prepareMessage();
-		message.createGetOperation(this.xdiCollectionXri);
+		message.createGetOperation(this.contextNodeXri);
 
 		MessageResult messageResult = this.endpoint.send(message);
 
-		ContextNode contextNode = messageResult.getGraph().findContextNode(this.xdiCollectionXri, false);
+		ContextNode contextNode = messageResult.getGraph().findContextNode(this.contextNodeXri, false);
 		if (contextNode == null) this.xdiCollection = null;
 
 		this.xdiCollection = XdiCollection.fromContextNode(contextNode);
@@ -135,7 +135,7 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 
 		// $add
 
-		XRI3Segment xdiAttributeMemberXri = new XRI3Segment("" + this.xdiCollectionXri + Multiplicity.attributeMemberArcXri());
+		XRI3Segment xdiAttributeMemberXri = new XRI3Segment("" + this.contextNodeXri + Multiplicity.attributeMemberArcXri());
 
 		Message message = this.endpoint.prepareMessage();
 		message.createAddOperation(StatementUtil.fromLiteralComponents(xdiAttributeMemberXri, value));
@@ -145,32 +145,32 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 
 	public XRI3Segment xdiMainAddress() {
 
-		return this.xdiCollection.getContextNode().getXri();
+		return this.contextNodeXri;
 	}
 
 	public XRI3Segment[] xdiGetAddresses() {
 
-		return new XRI3Segment[] {
-				this.xdiCollection.getContextNode().getXri()
-		};
+		return new XRI3Segment[0];
 	}
 
 	public XRI3Segment[] xdiAddAddresses() {
 
 		return new XRI3Segment[] {
-				this.xdiCollection.getContextNode().getXri()
+				this.contextNodeXri
 		};
 	}
 
 	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3Segment[0];
+		return new XRI3Segment[] {
+				this.contextNodeXri
+		};
 	}
 
 	public XRI3Segment[] xdiDelAddresses() {
 
 		return new XRI3Segment[] {
-				this.xdiCollection.getContextNode().getXri()
+				this.contextNodeXri
 		};
 	}
 
@@ -198,7 +198,7 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	public void setEndpointAndXdiCollectionXri(XdiEndpoint endpoint, XRI3Segment xdiCollectionXri, XdiCollection xdiCollection, String label) {
+	public void setEndpointAndContextNodeXriAndCollectionXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri, XRI3Segment collectionXri, XdiCollection xdiCollection) {
 
 		// remove us as listener
 
@@ -207,9 +207,9 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 		// refresh
 
 		this.endpoint = endpoint;
+		this.contextNodeXri = contextNodeXri;
+		this.collectionXri = collectionXri;
 		this.xdiCollection = xdiCollection;
-		this.xdiCollectionXri = xdiCollectionXri;
-		this.label = label;
 
 		this.refresh();
 
@@ -240,10 +240,10 @@ public class XdiCollectionPanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	private void addXdiAttributePanel(XdiAttribute xdiAttribute, String label) {
+	private void addXdiAttributePanel(XRI3Segment contextNodeXri, XRI3Segment attributeXri, XdiAttribute xdiAttribute) {
 
 		XdiAttributePanel xdiAttributePanel = new XdiAttributePanel();
-		xdiAttributePanel.setEndpointAndXdiAttributeXri(this.endpoint, xdiAttribute.getContextNode().getXri(), xdiAttribute, label);
+		xdiAttributePanel.setEndpointAndContextNodeXriAndAttributeXri(this.endpoint, contextNodeXri, attributeXri, xdiAttribute);
 		xdiAttributePanel.setReadOnly(this.readOnly);
 
 		this.xdiAttributesColumn.add(xdiAttributePanel);

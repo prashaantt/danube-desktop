@@ -60,29 +60,32 @@
 <p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/op-cancel.png</p>
 <p n="styleName">Plain</p>
 </c>
-<c i="Component_button1" t="nextapp.echo.app.Button">
+<c i="Component_linkFacebookButton" t="nextapp.echo.app.Button" vis="private">
 <p n="styleName">Default</p>
-<p n="text">Link to Facebook</p>
+
 <e t="action">
 <h n="actionPerformed" v="onLinkFacebookActionPerformed"/>
 </e>
 <p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/connect-facebook.png</p>
+<p n="text">Link</p>
 </c>
-<c i="Component_button2" t="nextapp.echo.app.Button">
+<c i="Component_linkPersonalButton" t="nextapp.echo.app.Button" vis="private">
 <p n="styleName">Default</p>
-<p n="text">Link to Personal.com</p>
+
 <e t="action">
 <h n="actionPerformed" v="onLinkPersonalActionPerformed"/>
 </e>
 <p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/connect-personal.png</p>
+<p n="text">Link</p>
 </c>
-<c i="Component_button4" t="nextapp.echo.app.Button">
+<c i="Component_linkAllfiledButton" t="nextapp.echo.app.Button" vis="private">
 <p n="styleName">Default</p>
-<p n="text">Link to Allfiled</p>
+
 <p n="icon" t="nextapp.echo.app.ResourceImageReference">/danube/desktop/web/resource/image/connect-allfiled.png</p>
 <e t="action">
 <h n="actionPerformed" v="onLinkAllfiledActionPerformed"/>
 </e>
+<p n="text">Link</p>
 </c>
 <c i="Component_button3" t="nextapp.echo.app.Button">
 <p n="styleName">Default</p>

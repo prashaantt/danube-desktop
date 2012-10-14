@@ -267,6 +267,8 @@ public class PersonalConnectorPanel extends Panel implements XdiGraphListener, E
 
 							PersonalConnectorPanel.this.xdiDel();
 							PersonalConnectorPanel.this.xdiAdd(accessToken);
+
+							MessageDialog.info("Successfully connected to Personal!");
 						} catch (Xdi2ClientException ex) {
 
 							MessageDialog.problem("Sorry, a problem occurred: " + ex.getMessage(), ex);
