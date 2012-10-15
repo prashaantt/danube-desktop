@@ -77,7 +77,7 @@ public class AccountPersonaContentPane extends ContentPane implements XdiGraphLi
 
 			this.nameLabel.setText(this.getName());
 			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
-			this.xdiEntityColumn.setEndpointAndXdiEntityXri(this.endpoint, this.contextNodeXri, null);
+			this.xdiEntityColumn.setEndpointAndContextNodeXri(this.endpoint, this.contextNodeXri, null);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);

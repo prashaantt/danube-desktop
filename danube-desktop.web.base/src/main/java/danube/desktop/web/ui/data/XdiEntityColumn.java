@@ -29,7 +29,7 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XRI3Segment xdiEntityXri;
+	private XRI3Segment contextNodeXri;
 	private XdiEntity xdiEntity;
 
 	private boolean readOnly;
@@ -87,10 +87,10 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 
 				if (XdiCollection.isValid(contextNode)) {
 
-					this.addXdiCollectionPanel(XdiCollection.fromContextNode(contextNode), personDictionaryXri.toString());
+					this.addXdiCollectionPanel(contextNode.getXri(), personDictionaryXri, XdiCollection.fromContextNode(contextNode));
 				} else if (XdiAttribute.isValid(contextNode)) {
 
-					this.addXdiAttributePanel(XdiAttribute.fromContextNode(contextNode), personDictionaryXri.toString());
+					this.addXdiAttributePanel(contextNode.getXri(), personDictionaryXri, XdiAttribute.fromContextNode(contextNode));
 				}
 			}
 		} catch (Exception ex) {
@@ -105,29 +105,29 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 		// $get
 
 		Message message = this.endpoint.prepareMessage();
-		message.createGetOperation(this.xdiEntityXri);
+		message.createGetOperation(this.contextNodeXri);
 
 		MessageResult messageResult = this.endpoint.send(message);
 
-		ContextNode contextNode = messageResult.getGraph().findContextNode(this.xdiEntityXri, false);
+		ContextNode contextNode = messageResult.getGraph().findContextNode(this.contextNodeXri, false);
 		if (contextNode == null) this.xdiEntity = null;
 
 		this.xdiEntity = XdiEntity.fromContextNode(contextNode);
 	}
 
-	private void addXdiCollectionPanel(XdiCollection xdiCollection, String label) {
+	private void addXdiCollectionPanel(XRI3Segment contextNodeXri, XRI3Segment collectionXri, XdiCollection xdiCollection) {
 
 		XdiCollectionPanel xdiCollectionPanel = new XdiCollectionPanel();
-		xdiCollectionPanel.setEndpointAndXdiCollectionXri(this.endpoint, xdiCollection.getContextNode().getXri(), xdiCollection, label);
+		xdiCollectionPanel.setEndpointAndContextNodeXriAndCollectionXri(this.endpoint, contextNodeXri, collectionXri, xdiCollection);
 		xdiCollectionPanel.setReadOnly(this.readOnly);
 
 		this.add(xdiCollectionPanel);
 	}
 
-	private void addXdiAttributePanel(XdiAttribute xdiAttribute, String label) {
+	private void addXdiAttributePanel(XRI3Segment contextNodeXri, XRI3Segment attributeXri, XdiAttribute xdiAttribute) {
 
 		XdiAttributePanel xdiAttributePanel = new XdiAttributePanel();
-		xdiAttributePanel.setEndpointAndXdiAttributeXri(this.endpoint, xdiAttribute.getContextNode().getXri(), xdiAttribute, label);
+		xdiAttributePanel.setEndpointAndContextNodeXriAndAttributeXri(this.endpoint, contextNodeXri, attributeXri, xdiAttribute);
 		xdiAttributePanel.setReadOnly(this.readOnly);
 
 		this.add(xdiAttributePanel);
@@ -135,7 +135,7 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 
 	public XRI3Segment xdiMainAddress() {
 
-		return this.xdiEntity.getContextNode().getXri();
+		return this.contextNodeXri;
 	}
 
 	public XRI3Segment[] xdiGetAddresses() {
@@ -145,18 +145,22 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 
 	public XRI3Segment[] xdiAddAddresses() {
 
-		return new XRI3Segment[0];
+		return new XRI3Segment[] {
+				this.contextNodeXri
+		};
 	}
 
 	public XRI3Segment[] xdiModAddresses() {
 
-		return new XRI3Segment[0];
+		return new XRI3Segment[] {
+				this.contextNodeXri
+		};
 	}
 
 	public XRI3Segment[] xdiDelAddresses() {
 
 		return new XRI3Segment[] {
-				this.xdiEntity.getContextNode().getXri()
+				this.contextNodeXri
 		};
 	}
 
@@ -184,7 +188,7 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 		}
 	}
 
-	public void setEndpointAndXdiEntityXri(XdiEndpoint endpoint, XRI3Segment xdiEntityXri, XdiEntity xdiEntity) {
+	public void setEndpointAndContextNodeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri, XdiEntity xdiEntity) {
 
 		// remove us as listener
 
@@ -193,7 +197,7 @@ public class XdiEntityColumn extends Column implements XdiGraphListener {
 		// refresh
 
 		this.endpoint = endpoint;
-		this.xdiEntityXri = xdiEntityXri;
+		this.contextNodeXri = contextNodeXri;
 		this.xdiEntity = xdiEntity;
 
 		this.refresh();

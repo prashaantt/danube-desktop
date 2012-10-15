@@ -66,7 +66,7 @@ public class AccountRootContentPane extends ContentPane implements XdiGraphListe
 
 			this.inumberLabel.setText(this.contextNodeXri.toString());
 			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
-			this.xdiEntityColumn.setEndpointAndXdiEntityXri(this.endpoint, this.contextNodeXri, null);
+			this.xdiEntityColumn.setEndpointAndContextNodeXri(this.endpoint, this.contextNodeXri, null);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
