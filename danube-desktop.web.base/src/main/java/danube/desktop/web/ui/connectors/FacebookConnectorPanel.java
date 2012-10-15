@@ -271,6 +271,8 @@ public class FacebookConnectorPanel extends Panel implements XdiGraphListener, E
 
 							FacebookConnectorPanel.this.xdiDel();
 							FacebookConnectorPanel.this.xdiAdd(accessToken);
+							
+							MessageDialog.info("Successfully connected to Facebook!");
 						} catch (Xdi2ClientException ex) {
 
 							MessageDialog.problem("Sorry, a problem occurred: " + ex.getMessage(), ex);

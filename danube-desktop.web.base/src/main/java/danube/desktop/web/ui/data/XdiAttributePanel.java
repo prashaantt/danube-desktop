@@ -14,8 +14,13 @@ import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.layout.RowLayoutData;
 import xdi2.client.exceptions.Xdi2ClientException;
+import xdi2.connector.allfiled.mapping.AllfiledMapping;
+import xdi2.connector.facebook.mapping.FacebookMapping;
+import xdi2.connector.personal.mapping.PersonalMapping;
 import xdi2.core.ContextNode;
 import xdi2.core.Literal;
+import xdi2.core.constants.XDIDictionaryConstants;
+import xdi2.core.exceptions.Xdi2RuntimeException;
 import xdi2.core.features.multiplicity.XdiAttribute;
 import xdi2.core.util.StatementUtil;
 import xdi2.core.xri3.impl.XRI3Segment;
@@ -37,9 +42,9 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 	protected ResourceBundle resourceBundle;
 
 	private XdiEndpoint endpoint;
-	private XRI3Segment xdiAttributeXri;
+	private XRI3Segment contextNodeXri;
+	private XRI3Segment attributeXri;
 	private XdiAttribute xdiAttribute;
-	private String label;
 
 	private boolean readOnly;
 
@@ -50,6 +55,9 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 	private Button editButton;
 	private Button updateButton;
 	private Button deleteButton;
+	private Button linkFacebookButton;
+	private Button linkPersonalButton;
+	private Button linkAllfiledButton;
 
 	/**
 	 * Creates a new <code>AccountPersonaPanel</code>.
@@ -95,13 +103,17 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 			// refresh UI
 
 			this.xdiPanel.setEndpointAndGraphListener(this.endpoint, this);
-			this.xdiAttributeXriLabel.setText(this.label);
+			this.xdiAttributeXriLabel.setText(this.attributeXri.toString());
 
 			Literal literal = this.xdiAttribute.getContextNode().getLiteral();
 			String value = literal == null ? null : literal.getLiteralData();
 
 			this.valueLabel.setText(value);
 			this.valueTextField.setText(value);
+
+			this.linkFacebookButton.setEnabled(FacebookMapping.getInstance().xdiDataXriToFacebookDataXri(this.attributeXri) != null);
+			this.linkPersonalButton.setEnabled(PersonalMapping.getInstance().xdiDataXriToPersonalDataXri(this.attributeXri) != null);
+			this.linkAllfiledButton.setEnabled(AllfiledMapping.getInstance().xdiDataXriToAllfiledDataXri(this.attributeXri) != null);
 		} catch (Exception ex) {
 
 			MessageDialog.problem("Sorry, a problem occurred while retrieving your Personal Data: " + ex.getMessage(), ex);
@@ -114,11 +126,11 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 		// $get
 
 		Message message = this.endpoint.prepareMessage();
-		message.createGetOperation(this.xdiAttributeXri);
+		message.createGetOperation(this.contextNodeXri);
 
 		MessageResult messageResult = this.endpoint.send(message);
 
-		ContextNode contextNode = messageResult.getGraph().findContextNode(this.xdiAttributeXri, false);
+		ContextNode contextNode = messageResult.getGraph().findContextNode(this.contextNodeXri, false);
 		if (contextNode == null) this.xdiAttribute = null;
 
 		this.xdiAttribute = XdiAttribute.fromContextNode(contextNode);
@@ -138,6 +150,17 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 
 	private void xdiAddFacebook() throws Xdi2ClientException {
 
+		// $add
+
+		XRI3Segment facebookDataXri = FacebookMapping.getInstance().xdiDataXriToFacebookDataXri(this.attributeXri);
+		if (facebookDataXri == null) throw new Xdi2RuntimeException("No mapping for Facebook available: " + this.attributeXri);
+
+		XRI3Segment facebookContextNodeXri = new XRI3Segment("" + FacebookMapping.XRI_S_FACEBOOK_CONTEXT + this.endpoint.getCanonical() + facebookDataXri);
+
+		Message message = this.endpoint.prepareMessage();
+		message.createAddOperation(StatementUtil.fromComponents(this.contextNodeXri, XDIDictionaryConstants.XRI_S_IS, facebookContextNodeXri));
+
+		this.endpoint.send(message);
 	}
 
 	private void xdiAddPersonal() throws Xdi2ClientException {
@@ -156,10 +179,8 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 
 		// $mod
 
-		XRI3Segment contextNodeXri = this.xdiAttribute.getContextNode().getXri();
-
 		Message message = this.endpoint.prepareMessage();
-		message.createModOperation(StatementUtil.fromLiteralComponents(contextNodeXri, value));
+		message.createModOperation(StatementUtil.fromLiteralComponents(this.contextNodeXri, value));
 
 		this.endpoint.send(message);
 	}
@@ -168,17 +189,15 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 
 		// $del
 
-		XRI3Segment contextNodeXri = this.xdiAttribute.getContextNode().getXri();
-
 		Message message = this.endpoint.prepareMessage();
-		message.createDelOperation(contextNodeXri);
+		message.createDelOperation(this.contextNodeXri);
 
 		this.endpoint.send(message);
 	}
 
 	public XRI3Segment xdiMainAddress() {
 
-		return this.xdiAttributeXri;
+		return this.contextNodeXri;
 	}
 
 	public XRI3Segment[] xdiGetAddresses() {
@@ -189,21 +208,21 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 	public XRI3Segment[] xdiAddAddresses() {
 
 		return new XRI3Segment[] {
-				this.xdiAttributeXri
+				this.contextNodeXri
 		};
 	}
 
 	public XRI3Segment[] xdiModAddresses() {
 
 		return new XRI3Segment[] {
-				this.xdiAttributeXri
+				this.contextNodeXri
 		};
 	}
 
 	public XRI3Segment[] xdiDelAddresses() {
 
 		return new XRI3Segment[] {
-				this.xdiAttributeXri
+				this.contextNodeXri
 		};
 	}
 
@@ -231,7 +250,7 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 		}
 	}
 
-	public void setEndpointAndXdiAttributeXri(XdiEndpoint endpoint, XRI3Segment xdiAttributeXri, XdiAttribute xdiAttribute, String label) {
+	public void setEndpointAndContextNodeXriAndAttributeXri(XdiEndpoint endpoint, XRI3Segment contextNodeXri, XRI3Segment attributeXri, XdiAttribute xdiAttribute) {
 
 		// remove us as listener
 
@@ -240,9 +259,9 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 		// refresh
 
 		this.endpoint = endpoint;
+		this.contextNodeXri = contextNodeXri;
+		this.attributeXri = attributeXri;
 		this.xdiAttribute = xdiAttribute;
-		this.xdiAttributeXri = xdiAttributeXri;
-		this.label = label;
 
 		this.refresh();
 
@@ -453,48 +472,48 @@ public class XdiAttributePanel extends Panel implements XdiGraphListener {
 			}
 		});
 		row1.add(deleteButton);
-		Button button1 = new Button();
-		button1.setStyleName("Default");
+		linkFacebookButton = new Button();
+		linkFacebookButton.setStyleName("Default");
 		ResourceImageReference imageReference4 = new ResourceImageReference(
 				"/danube/desktop/web/resource/image/connect-facebook.png");
-		button1.setIcon(imageReference4);
-		button1.setText("Link to Facebook");
-		button1.addActionListener(new ActionListener() {
+		linkFacebookButton.setIcon(imageReference4);
+		linkFacebookButton.setText("Link");
+		linkFacebookButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
 				onLinkFacebookActionPerformed(e);
 			}
 		});
-		row1.add(button1);
-		Button button2 = new Button();
-		button2.setStyleName("Default");
+		row1.add(linkFacebookButton);
+		linkPersonalButton = new Button();
+		linkPersonalButton.setStyleName("Default");
 		ResourceImageReference imageReference5 = new ResourceImageReference(
 				"/danube/desktop/web/resource/image/connect-personal.png");
-		button2.setIcon(imageReference5);
-		button2.setText("Link to Personal.com");
-		button2.addActionListener(new ActionListener() {
+		linkPersonalButton.setIcon(imageReference5);
+		linkPersonalButton.setText("Link");
+		linkPersonalButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
 				onLinkPersonalActionPerformed(e);
 			}
 		});
-		row1.add(button2);
-		Button button4 = new Button();
-		button4.setStyleName("Default");
+		row1.add(linkPersonalButton);
+		linkAllfiledButton = new Button();
+		linkAllfiledButton.setStyleName("Default");
 		ResourceImageReference imageReference6 = new ResourceImageReference(
 				"/danube/desktop/web/resource/image/connect-allfiled.png");
-		button4.setIcon(imageReference6);
-		button4.setText("Link to Allfiled");
-		button4.addActionListener(new ActionListener() {
+		linkAllfiledButton.setIcon(imageReference6);
+		linkAllfiledButton.setText("Link");
+		linkAllfiledButton.addActionListener(new ActionListener() {
 			private static final long serialVersionUID = 1L;
 
 			public void actionPerformed(ActionEvent e) {
 				onLinkAllfiledActionPerformed(e);
 			}
 		});
-		row1.add(button4);
+		row1.add(linkAllfiledButton);
 		Button button3 = new Button();
 		button3.setStyleName("Default");
 		button3.setText("Unlink");
